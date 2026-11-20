@@ -140,13 +140,13 @@ private fun MixerPanel(viewModel: DjViewModel, modifier: Modifier = Modifier) {
             Text("A", color = HamaxColors.DeckA, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
             Fader(
                 value = viewModel.crossfader,
-                onValueChange = { viewModel.setCrossfader(it) },
+                onValueChange = { viewModel.updateCrossfader(it) },
                 vertical = false,
                 accent = Color.White,
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 snapToCenter = true,
                 showCenterTick = true,
-                onDoubleTap = { viewModel.setCrossfader(0.5f) }
+                onDoubleTap = { viewModel.updateCrossfader(0.5f) }
             )
             Text("B", color = HamaxColors.DeckB, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
         }
@@ -162,7 +162,7 @@ private fun ChannelFader(deck: Deck, accent: Color, modifier: Modifier = Modifie
     ) {
         Fader(
             value = deck.channelVolume,
-            onValueChange = { deck.setChannelVolume(it) },
+            onValueChange = { deck.updateChannelVolume(it) },
             vertical = true,
             accent = accent,
             modifier = Modifier.weight(1f).width(44.dp),

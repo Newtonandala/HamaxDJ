@@ -21,7 +21,7 @@ class DjViewModel(application: Application) : AndroidViewModel(application) {
         applyCrossfader()
     }
 
-    fun setCrossfader(value: Float) {
+    fun updateCrossfader(value: Float) {
         crossfader = value.coerceIn(0f, 1f)
         applyCrossfader()
     }
@@ -29,8 +29,8 @@ class DjViewModel(application: Application) : AndroidViewModel(application) {
     /** Constant-power curve so the loudness stays even while you sweep across. */
     private fun applyCrossfader() {
         val angle = crossfader * (Math.PI / 2.0)
-        deckA.setCrossfadeGain(cos(angle).toFloat())
-        deckB.setCrossfadeGain(sin(angle).toFloat())
+        deckA.updateCrossfadeGain(cos(angle).toFloat())
+        deckB.updateCrossfadeGain(sin(angle).toFloat())
     }
 
     fun pauseAll() {

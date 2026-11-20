@@ -242,12 +242,12 @@ class Deck(private val context: Context, val label: String) {
 
     // ---- volume ------------------------------------------------------------------------
 
-    fun setChannelVolume(value: Float) {
+    fun updateChannelVolume(value: Float) {
         channelVolume = value.coerceIn(0f, 1f)
         applyVolume()
     }
 
-    fun setCrossfadeGain(gain: Float) {
+    fun updateCrossfadeGain(gain: Float) {
         crossfadeGain = gain
         applyVolume()
     }
