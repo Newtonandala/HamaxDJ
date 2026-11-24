@@ -3,6 +3,9 @@ package com.hamax.dj.ui
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
 object HamaxColors {
@@ -15,8 +18,17 @@ object HamaxColors {
     val Text = Color(0xFFE6E8EC)
     val Soft = Color(0xFFB4BAC6)
     val Muted = Color(0xFF8B93A1)
-    val DeckA = Color(0xFF2CA4E8)
-    val DeckB = Color(0xFFF0505A)
+    private var accentA by mutableStateOf(Color(0xFF2CA4E8))
+    private var accentB by mutableStateOf(Color(0xFFF0505A))
+
+    /** Deck colours follow the "Deck colours" setting, so they are read through state. */
+    val DeckA: Color get() = accentA
+    val DeckB: Color get() = accentB
+
+    fun updateAccents(a: Color, b: Color) {
+        accentA = a
+        accentB = b
+    }
     val Cue = Color(0xFFFFB020)
     val OnAccent = Color(0xFF0B0D11)
 }

@@ -22,6 +22,7 @@ import com.hamax.dj.Deck
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 private val SilverRim = listOf(
     Color(0xFF8E939B), Color(0xFFE3E6EA), Color(0xFF6F747C), Color(0xFFCDD0D5),
@@ -52,18 +53,28 @@ fun JogWheel(deck: Deck, accent: Color, modifier: Modifier = Modifier) {
     Canvas(
         modifier.pointerInput(deck) {
             var last = 0f
+            var onRim = false
             fun angleAt(p: Offset): Float {
                 val dy = (p.y - size.height / 2f).toDouble()
                 val dx = (p.x - size.width / 2f).toDouble()
                 return Math.toDegrees(atan2(dy, dx)).toFloat()
             }
+            fun endTouch() {
+                if (onRim) deck.nudgeEnd() else deck.jogEnd()
+                onRim = false
+            }
             detectDragGestures(
                 onDragStart = { start ->
                     last = angleAt(start)
-                    deck.jogStart()
+                    val dx = start.x - size.width / 2f
+                    val dy = start.y - size.height / 2f
+                    val radius = sqrt(dx * dx + dy * dy)
+                    // the outer silver ring bends the pitch; the platter scratches
+                    onRim = radius > minOf(size.width, size.height) / 2f * 0.80f
+                    if (onRim) deck.nudgeStart() else deck.jogStart()
                 },
-                onDragEnd = { deck.jogEnd() },
-                onDragCancel = { deck.jogEnd() },
+                onDragEnd = { endTouch() },
+                onDragCancel = { endTouch() },
                 onDrag = { change, _ ->
                     change.consume()
                     val a = angleAt(change.position)
@@ -71,7 +82,7 @@ fun JogWheel(deck: Deck, accent: Color, modifier: Modifier = Modifier) {
                     if (delta > 180f) delta -= 360f
                     if (delta < -180f) delta += 360f
                     last = a
-                    deck.jogMove(delta)
+                    if (onRim) deck.nudgeMove(delta) else deck.jogMove(delta)
                 }
             )
         }
